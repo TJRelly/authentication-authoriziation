@@ -9,5 +9,26 @@ Register
     <h1 class="display-1">
         Register
     </h1>
+    <form id="register-form" method="POST">
+        {{ form.hidden_tag() }} <!--add type=hidden form fields -->
+      
+        {% for field in form
+               if field.widget.input_type != 'hidden' %}
+      
+        <div class="form-group">
+            {{ field.label (class_ = "pt-3")}}
+            {{ field (class_ = "form-control")}}
+      
+            {% for error in field.errors %}
+                <small class="form-text text-danger">
+                    {{ error }}
+                </small>  
+            {% endfor %}
+        </div>
+      
+        {% endfor %}
+      
+        <button type="submit" class="btn btn-primary mt-3">Register</button>
+      </form>
 </main>
 {% endblock %}

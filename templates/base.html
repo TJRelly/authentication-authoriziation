@@ -10,6 +10,33 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid px-3">
+            <a class="navbar-brand">Authenticate Me</a>
+            <ul class="navbar-nav flex-row">
+                <li class="nav-item px-3">
+                  <a class="nav-link" href="/login">Log In</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/logout">Log Out</a>
+                </li>
+                </li>
+              </ul>
+          </div>
+      </nav>
+
+    <!-- Display Flash Messages -->
+    <div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes list-unstyled lead bg-primary text-light text-center p-2">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
 
     {% block content %}{% endblock %}
 
