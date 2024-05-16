@@ -23,4 +23,8 @@ class User(db.Model):
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
     
+    def __repr__(self):
+        user = self
+        return f"<User username={user.username} password={user.password} email={user.email} first_name={user.first_name} last_name={user.last_name}>"
+    
     
