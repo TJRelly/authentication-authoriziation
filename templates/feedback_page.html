@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Feedback
+{% endblock %}
+
+{% block content %}
+
+<!-- User Page -->
+<main class="container">
+    
+    <h1 class="display-3 pt-4">
+       {{comment.title}}!
+    </h1>
+    <p class="lead">
+        {{comment.comment}}
+    </p>
+    <small>By: <a href="/users/{{comment.user.username}}">{{comment.user.username}}</a></small>
+
+    <form action="/feedback/{{comment.id}}/delete" method="POST">
+        <button type="submit" class="d-flex mt-3 btn btn-danger">Delete</button>
+    </form>
+    
+</main>
+
+{% endblock %}
