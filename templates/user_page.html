@@ -7,27 +7,38 @@ Your Profile
 {% block content %}
 
 <!-- User Page -->
-<main class="container">
+<main class="container d-flex flex-column justify-content-between p-4">
     
-    <h1 class="display-2 pt-4">
-       Hi {{user.username}}!
-    </h1>
-    <ul class="lead">
-        <li>Name: {{user.first_name}} {{user.last_name}}</li>
-        <li>Username: {{user.username}}</li>
-        <li>Email: {{user.email}}</li>
-    </ul>
-    <h2 class="display-4">Feedback</h2>
-    <ul class="lead">
-        {% for comment in user.feedback %}
-        <li>
-            <div>
-                <a href="/feedback/{{comment.id}}" class="text-info">{{comment.title}}</a>
-                <p>{{comment.comment}}</p>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
+   <section class="top">
+    <h1 class="display-2">
+        Hi {{user.username}}!
+     </h1>
+     <ul class="lead">
+         <li>Name: {{user.first_name}} {{user.last_name}}</li>
+         <li>Username: {{user.username}}</li>
+         <li>Email: {{user.email}}</li>
+     </ul>
+     <h2 class="display-4">Feedback</h2>
+     <ul class="lead">
+         {% for comment in user.feedback %}
+         <li>
+             <div>
+                 <a href="/feedback/{{comment.id}}" class="text-info">{{comment.title}}</a>
+                 <p>{{comment.comment}}</p>
+             </div>
+         </li>
+         {% endfor %}
+     </ul>
+     <a href="/users/{{user.username}}/feedback/add" class="btn btn-info">Add Feedback</a>
+   </section>
+
+    <section class="bottom">
+        <form action="/users/{{user.username}}/delete" method="POST">
+            <button class="btn btn-danger mt-4">Delete Account</button>
+        </form>
+        <small class="text-danger">Warning! This action is irreversible.</small> 
+    </section>    
+    
 </main>
 
 {% endblock %}

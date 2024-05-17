@@ -23,7 +23,7 @@ class User(db.Model):
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
     
-    feedback = db.relationship("Feedback", backref="user")
+    feedback = db.relationship("Feedback", backref="user", cascade="all, delete")
     
     def __repr__(self):
         user = self
@@ -63,7 +63,7 @@ class Feedback(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     comment = db.Column(db.Text, nullable=False, unique=True)
-    username = db.Column(db.String(20), db.ForeignKey('users.username'), nullable=False)
+    username = db.Column(db.String(20), db.ForeignKey('users.username', ondelete="CASCADE"), nullable=False)
     
     def __repr__(self):
         feedback = self

@@ -3,7 +3,7 @@
 from flask import Flask, render_template, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from models import Feedback, connect_db, db, User
-from forms import LoginForm, RegisterForm
+from forms import EditFeedbackForm, LoginForm, RegisterForm
 
 app = Flask(__name__)
 app.app_context().push()
@@ -110,7 +110,7 @@ def logout():
 
     return redirect("/login")
 
-@app.route("/feedback/<comment_id>")
+@app.route("/feedback/<comment_id>", methods=["GET", "POST"])
 def show_feedback(comment_id):
     """Displays user feedback."""
     
@@ -120,9 +120,29 @@ def show_feedback(comment_id):
 
     else:
         comment = Feedback.query.get_or_404(comment_id)
-        return render_template("feedback_page.html", comment=comment)
+        
+        form = EditFeedbackForm(obj=comment)
+        
+        if form.validate_on_submit():
+            feedback_data = {
+                "title": form.title.data,
+                "comment": form.comment.data
+            }
+            
+            comment.title = feedback_data.get("title")
+            comment.comment = feedback_data.get("comment")
+            
+            db.session.add(comment)
+            db.session.commit()
+                
+            flash(f"You've successfully edited your comment.")
+            
+            return redirect(f"/feedback/{comment.id}")
+        
+        else:
+            return render_template("feedback_page.html", comment=comment, form=form)
     
-@app.route("/feedback/<comment_id>/delete", methods=["POST"])
+@app.route("/feedback/<comment_id>/delete")
 def delete_feedback(comment_id):
     """Displays user feedback."""
     
@@ -133,6 +153,54 @@ def delete_feedback(comment_id):
     else:
         comment = Feedback.query.get_or_404(comment_id)
         username = comment.user.username
+        flash("You successfully deleted the comment.")
         db.session.delete(comment)
         db.session.commit()
         return redirect(f"/users/{username}")
+    
+@app.route("/users/<username>/delete", methods=["POST"])
+def delete_user(username):
+    """Displays user feedback."""
+    
+    if "username" not in session:
+        flash("You must be logged in to view!")
+        return redirect("/")
+
+    else:
+        username = User.query.get_or_404(username)
+        db.session.delete(username)
+        db.session.commit()
+        
+        flash("You successfully deleted your account.")
+        return redirect(f"/")
+    
+@app.route("/users/<username>/feedback/add", methods=["GET", "POST"])
+def add_feedback(username):
+    """Adds new user feedback."""
+    
+    if "username" not in session:
+        flash("You must be logged in to view!")
+        return redirect("/")
+
+    else:
+        user = User.query.get_or_404(username)
+        
+        form = EditFeedbackForm()
+        
+        if form.validate_on_submit():
+            feedback_data = {
+                "title": form.title.data,
+                "comment": form.comment.data
+            }
+            
+            comment = Feedback(title=feedback_data.get("title"), comment=feedback_data.get("comment"), username=user.username)
+           
+            db.session.add(comment)
+            db.session.commit()
+                
+            flash(f"You've successfully added your comment.")
+            
+            return redirect(f"/users/{user.username}")
+        
+        else:
+            return render_template("feedback_add_page.html", form=form, user=user)

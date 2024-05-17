@@ -11,14 +11,11 @@ Feedback
 
     <div class="comment">
         <h1 class="display-3 pt-4">
-            {{comment.title}}
+            Add Feedback
          </h1>
-         <p class="lead px-1">
-            {{comment.comment}}
-         </p>    
     </div>
    
-    <form id="register-form" method="POST" action="/feedback/{{comment.id}}">
+    <form id="register-form" method="POST" action="/users/{{user.username}}/feedback/add">
         {{ form.hidden_tag() }} <!--add type=hidden form fields -->
       
         {% for field in form
@@ -36,15 +33,13 @@ Feedback
         </div>
       
         {% endfor %}
-      
-        <div class="btns d-flex my-4 gap-2">
-            <button type="submit" class="btn btn-info">Save</button>
-            <a href="/feedback/{{comment.id}}/delete" class="btn btn-outline-danger">Delete</a>
-        </div>
 
-        <a href="/users/{{comment.user.username}}">Back to {{comment.user.username}}</a>
+        <div class="pt-3 pb-4">
+            <button type="submit" class="btn btn-info">Add</button>
+        </div>
+        
       </form>
-    
+      <a href="/users/{{user.username}}">Back to {{user.username}}</a>
 </main>
 
 {% endblock %}
