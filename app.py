@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import connect_db, db, User
+from models import Feedback, connect_db, db, User
 from forms import LoginForm, RegisterForm
 
 app = Flask(__name__)
@@ -25,7 +25,7 @@ toolbar = DebugToolbarExtension(app)
 def homepage():
     """Show homepage with links to site areas."""
 
-    return redirect("/register")
+    return render_template("home.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -51,7 +51,7 @@ def register():
             first_name = user_data["first_name"]      
             session["username"] = new_user.username
             
-            flash(f"Welcome {first_name}!")
+            flash(f"{first_name}, you are registered!")
             return redirect(f"/users/{new_user.username}")
         
         except:
@@ -109,3 +109,30 @@ def logout():
         session.pop("username")
 
     return redirect("/login")
+
+@app.route("/feedback/<comment_id>")
+def show_feedback(comment_id):
+    """Displays user feedback."""
+    
+    if "username" not in session:
+        flash("You must be logged in to view!")
+        return redirect("/")
+
+    else:
+        comment = Feedback.query.get_or_404(comment_id)
+        return render_template("feedback_page.html", comment=comment)
+    
+@app.route("/feedback/<comment_id>/delete", methods=["POST"])
+def delete_feedback(comment_id):
+    """Displays user feedback."""
+    
+    if "username" not in session:
+        flash("You must be logged in to view!")
+        return redirect("/")
+
+    else:
+        comment = Feedback.query.get_or_404(comment_id)
+        username = comment.user.username
+        db.session.delete(comment)
+        db.session.commit()
+        return redirect(f"/users/{username}")

@@ -23,7 +23,7 @@ class User(db.Model):
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
     
-    comments = db.relationship("Feedback", backref="user")
+    feedback = db.relationship("Feedback", backref="user")
     
     def __repr__(self):
         user = self
