@@ -9,7 +9,7 @@ Your Profile
 <!-- User Page -->
 <main class="container">
     
-    <h1 class="display-2">
+    <h1 class="display-2 pt-4">
        Hi {{user.username}}!
     </h1>
     <ul class="lead">
@@ -20,7 +20,12 @@ Your Profile
     <h2 class="display-4">Feedback</h2>
     <ul class="lead">
         {% for comment in user.feedback %}
-        <li><a href="/feedback/{{comment.id}}" class="text-info">{{comment.title}}</a></li>
+        <li>
+            <div>
+                <a href="/feedback/{{comment.id}}" class="text-info">{{comment.title}}</a>
+                <p>{{comment.comment}}</p>
+            </div>
+        </li>
         {% endfor %}
     </ul>
 </main>

@@ -8,18 +8,42 @@ Feedback
 
 <!-- User Page -->
 <main class="container">
-    
-    <h1 class="display-3 pt-4">
-       {{comment.title}}!
-    </h1>
-    <p class="lead">
-        {{comment.comment}}
-    </p>
-    <small>By: <a href="/users/{{comment.user.username}}">{{comment.user.username}}</a></small>
 
-    <form action="/feedback/{{comment.id}}/delete" method="POST">
-        <button type="submit" class="d-flex mt-3 btn btn-danger">Delete</button>
-    </form>
+    <div class="comment">
+        <h1 class="display-3 pt-4">
+            {{comment.title}}
+         </h1>
+         <p class="lead px-1">
+            {{comment.comment}}
+         </p>    
+    </div>
+   
+    <form id="register-form" method="POST" action="/feedback/{{comment.id}}">
+        {{ form.hidden_tag() }} <!--add type=hidden form fields -->
+      
+        {% for field in form
+               if field.widget.input_type != 'hidden' %}
+      
+        <div class="form-group">
+            {{ field.label (class_ = "pt-3")}}
+            {{ field (class_ = "form-control")}}
+      
+            {% for error in field.errors %}
+                <small class="form-text text-danger">
+                    {{ error }}
+                </small>  
+            {% endfor %}
+        </div>
+      
+        {% endfor %}
+      
+        <div class="btns d-flex my-4 gap-2">
+            <button type="submit" class="btn btn-primary">Edit</button>
+            <a href="/feedback/{{comment.id}}/delete" class="btn btn-danger">Delete</a>
+        </div>
+
+        <a href="/users/{{comment.user.username}}">Back to {{comment.user.username}}</a>
+      </form>
     
 </main>
 
